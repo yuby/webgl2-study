@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div>
+		<canvas id="glcanvas"></canvas>
+	</div>
+  <script src="gl.js"></script>
+  <script src="shaders.js"></script>
+  <script src="renderLoop.js"></script>
+  <script>
+    (async () => {
+      const glInstance = new GL('glcanvas');
+
+      glInstance.clearColor();
+      glInstance.setSize(500, 500);
+      glInstance.clear();
+
+      const gl = glInstance.getGL();
+
+      const shaderProgram = await ShaderUtil.domShaderProgram(gl, "./vertex.vert", "./fragment.frag", true);
+
+      gl.useProgram(shaderProgram);
+
+      const aPositionLoc = gl.getAttribLocation(shaderProgram, "a_position");
+      const uPointSizeLoc = gl.getUniformLocation(shaderProgram, "uPointSize");
+      const uAngleLoc = gl.getUniformLocation(shaderProgram, "uAngle");
+      gl.useProgram(null);
+
+      const aryVerts = new Float32Array([0, 0, 0]);
+      const vertxBuf = glInstance.createArrayBuffer(aryVerts);
+      const VERT_XYZ_COUNT = 3;
+      const totalVertxCnt = aryVerts.length / VERT_XYZ_COUNT;
+
+      gl.useProgram(shaderProgram);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, vertxBuf);
+      gl.enableVertexAttribArray(aPositionLoc);
+      gl.vertexAttribPointer(aPositionLoc, VERT_XYZ_COUNT, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+
+      let pointSize = 0;
+      let angle = 0;
+      const angleStep = (Math.PI / 180) * 90;
+      const pointSizeStep = 3;
+      const onRender = (delta) => {
+        pointSize += pointSizeStep * delta;
+        angle += angleStep * delta;
+
+        const size = (Math.sin(pointSize) * 10.0) + 30.0;
+
+        gl.uniform1f(uPointSizeLoc, size);
+        gl.uniform1f(uAngleLoc, angle);
+        glInstance.clear();
+        gl.drawArrays(gl.POINTS, 0, totalVertxCnt);
+      }
+
+      const loop = new RenderLoop(onRender);
+
+      loop.start();
+    })()
+  </script>
+</body>
+</html>
