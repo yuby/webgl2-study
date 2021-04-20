@@ -31,15 +31,18 @@ const run = async () => {
 
   const testShader = new TestShader(gl, vShaderText, fShaderText);
 
-  const meshVAO = new VAO(
-    'POINTS',
+  const meshVAO = new VAO({
+    type: 'POINTS',
     gl,
-    null,
-    [0,0,0, 0.1,0.1,0, 0.1,-0.1,0, -0.1,-0.1,0, -0.1,0.1,0],
-    null,
-    null,
-    true,
-  );
+    arrIndex: null,
+    vertices: {
+      data: [0,0,0, 0.1,0.1,0, 0.1,-0.1,0, -0.1,-0.1,0, -0.1,0.1,0],
+      count: 3,
+    },
+    arrNorm: null,
+    arrUV: null,
+    isStatic: true,
+  });
 
   let pointSize = 0;
   let angle = 0;

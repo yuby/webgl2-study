@@ -1,5 +1,15 @@
 class VAO {
-  constructor(type = 'TRIANGLES', gl, arrIndex = null, arrVertx = null, arrNorm = null, arrUV = null, isStatic = true) {
+  constructor(props) {
+    const {
+      type = 'TRIANGLES',
+      gl,
+      arrIndex = null,
+      vertices = null,
+      arrNorm = null,
+      arrUV = null,
+      isStatic = true
+    } = props;
+
     const _vao = gl.createVertexArray();
 
     gl.bindVertexArray(_vao);
@@ -8,14 +18,13 @@ class VAO {
     this.drawMode = gl[type];
     this.vao = _vao;
     this.isStatic = isStatic;
-    this.EACH_VERT_COUNT = 3;
     this.EACH_UV_COUNT = 2;
 
     this.vertex = null;
     this.normal = null;
     this.uv = null;
     this.vertexIndex = null;
-    this._setVertices(arrVertx);
+    this._setVertices(vertices);
     this._setNormal(arrNorm);
     this._setUV(arrUV);
     this._setVertexIndex(arrIndex);
@@ -24,26 +33,28 @@ class VAO {
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
   }
 
-  _setVertices(arrVertx) {
-    if (!arrVertx) return;
-    const { gl, EACH_VERT_COUNT } = this;
+  _setVertices(vertexInfo) {
+    if (!vertexInfo) return;
+    const { gl } = this;
+    const { data, count } = vertexInfo;
 
     this.vertex = {
-      data: new Float32Array(arrVertx),
+      data: new Float32Array(data),
       buffer: gl.createBuffer(),
-      length: arrVertx.length / EACH_VERT_COUNT,
-      vertexEach: EACH_VERT_COUNT,
+      length: data.length / count,
+      vertexEach: count,
     };
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vertex.buffer);
     gl.bufferData(gl.ARRAY_BUFFER, this.vertex.data, (this.isStatic ? gl.STATIC_DRAW : gl.DYNAMIC_DRAW));
     gl.enableVertexAttribArray(ATTR_POSITION_LOC);
-    gl.vertexAttribPointer(ATTR_POSITION_LOC, EACH_VERT_COUNT, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(ATTR_POSITION_LOC, count, gl.FLOAT, false, 0, 0);
   }
 
   _setNormal(arrNorm) {
     if (!arrNorm) return;
-    const { gl, EACH_VERT_COUNT } = this;
+    const { gl } = this;
+    const vertexCount = this.vertex.vertexEach;
 
     this.normal = {
       data: new Float32Array(arrNorm),
@@ -53,7 +64,7 @@ class VAO {
     this.bindBuffer(gl.ARRAY_BUFFER, this.normal.buffer);
     this.bufferData(gl.ARRAY_BUFFER, this.normal.data, (this.isStatic ? gl.STATIC_DRAW : gl.DYNAMIC_DRAW));
     gl.enableVertexAttribArray(ATTR_NORMAL_LOC);
-    gl.vertexAttribPointer(ATTR_NORMAL_LOC, EACH_VERT_COUNT, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(ATTR_NORMAL_LOC, vertexCount, gl.FLOAT, false, 0, 0);
   }
 
   _setUV(arrUV) {
