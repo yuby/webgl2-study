@@ -1,6 +1,14 @@
 # Webgl2 Study
 
-https://github.com/sketchpunk/FunWithWebGL2
+## Ref.
+
+- https://luma.gl/
+- https://webgl2fundamentals.org/webgl/lessons/ko/webgl-fundamentals.html
+- https://github.com/sketchpunk/FunWithWebGL2
+- https://github.com/mdn/webgl-examples/blob/gh-pages/tutorial/sample3/webgl-demo.js
+
+
+## Progress
 
 - [v] 001 - first vertex
 - [v] 002 - animation loop
