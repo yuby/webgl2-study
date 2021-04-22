@@ -1,4 +1,4 @@
-class Buffer {
+class Attribute {
   constructor(data, numOfComponent = 3,isStatic = true) {
     this.data = data;
     this.buffer = null;
@@ -11,12 +11,18 @@ class Buffer {
   initBuffer(name, gl, program) {
     this.buffer = gl.createBuffer();
     this.location = gl.getAttribLocation(program, name);
-
-    const { buffer, data, isStatic } = this;
+    const {
+      numOfComponent, buffer, data, isStatic,
+      location,
+    } = this;
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.bufferData(gl.ARRAY_BUFFER, data, (isStatic ? gl.STATIC_DRAW : gl.DYNAMIC_DRAW));
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    return {
+      buffer,
+      location,
+      numOfComponent,
+    }
   }
 }

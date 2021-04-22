@@ -15,4 +15,5 @@
 - [v] 003 - shader /  refactoring
 - [v] 004 - line / grid
 - [v] 004-1 - like a luma.gl
-- [v] 004-2 - line / grid + color
+- [v] 004-2 - line / grid + color + angle
+- [TODO] 005 - transform

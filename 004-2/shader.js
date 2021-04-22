@@ -20,8 +20,9 @@ class Shader {
 
     if (this.program !== null) {
       gl.useProgram(this.program);
-      this._clearRef();
       this._initAttribBuffer();
+      this._initUniform();
+      this._clearRef();
     }
   }
 
@@ -30,31 +31,29 @@ class Shader {
 
     gl.bindVertexArray(null);
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
-    gl.useProgram(null);
+  }
+
+  _initUniform() {
+    const { gl, program } = this;
+
+    Object.keys(this.uniforms).forEach((key) => {
+      this.uniforms[key].initUniform(key, gl, program);
+    })
   }
 
   _initAttribBuffer() {
     const { gl, program } = this;
-    Object.keys(this.attributes).forEach((key) => {
-      this.attributes[key].initBuffer(key, gl, program);
-    })
-  }
-
-  activate() {
-    const { gl, attributes } = this;
-
-    gl.useProgram(this.program);
 
     this.vao = gl.createVertexArray();
 
     gl.bindVertexArray(this.vao);
 
-    Object.keys(attributes).forEach((key) => {
+    Object.keys(this.attributes).forEach((key) => {
       const {
         location,
         numOfComponent,
         buffer
-      } = attributes[key];
+      } = this.attributes[key].initBuffer(key, gl, program);
 
       gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
       gl.vertexAttribPointer(
@@ -67,6 +66,15 @@ class Shader {
       );
       gl.enableVertexAttribArray(location);
     });
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    gl.bindVertexArray(null);
+  }
+
+  activate() {
+    const { gl } = this;
+
+    gl.useProgram(this.program);
   }
 
   deActivate() {
@@ -83,8 +91,9 @@ class Shader {
   preRender() {}
 
   render() {
-    const { gl, primitiveType, vertexCount } = this;
+    const { gl, primitiveType, vertexCount, vao } = this;
 
+    gl.bindVertexArray(vao);
     gl.drawArrays(gl[primitiveType], 0, vertexCount);
     this._clearRef();
   }
