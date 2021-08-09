@@ -4,12 +4,12 @@ class Uniform {
     this.type = type;
     this.transpose = transpose;
     this.location = null;
+    this.name = null;
   }
 
   initUniform(name, gl, program) {
+    this.name = name;
     this.location = gl.getUniformLocation(program, name);
-
-    console.log(name, this.location)
 
     if (this.data) {
       this.update(gl, this.data);
