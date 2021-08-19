@@ -9,10 +9,20 @@ const run = async () => {
   const vShaderText = await ShaderUtil.shaderLoader('./vertex.vert');
   const fShaderText = await ShaderUtil.shaderLoader('./fragment.frag');
 
-  const positionAttr = new Attribute(fShape, 3);
+  const positionAttr = new Attribute(
+    fShape,
+    3,
+    'FLOAT',
+    false,
+  );
+  const colorAttr = new Attribute(
+    fShpaeColor,
+    3,
+    'UNSIGNED_BYTE',
+    true,
+  );
 
   const transformMat = new Transform();
-
   transformMat.orthographic(
     0,
     gl.canvas.clientWidth,
@@ -30,19 +40,15 @@ const run = async () => {
 
   const mvUniform = new Uniform('uniformMatrix4fv', transformMat.getViewMatrix(), false);
 
-  const colorUniform = new Uniform('uniform4fv', [Math.random(), Math.random(), Math.random(), 1]);
-
-  console.log(positionAttr.vertexCount)
-
   const model = new Shader({
     gl,
     vs: vShaderText,
     fs: fShaderText,
     attributes: {
-      a_position: positionAttr
+      a_position: positionAttr,
+      a_color: colorAttr,
     },
     uniforms: {
-      u_color: colorUniform,
       u_mv: mvUniform,
     },
     vertexCount: positionAttr.vertexCount,

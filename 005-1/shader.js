@@ -53,15 +53,17 @@ class Shader {
       const {
         location,
         numOfComponent,
-        buffer
+        buffer,
+        dataType,
+        normalize
       } = this.attributes[key].initBuffer(key, gl, program);
 
       gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
       gl.vertexAttribPointer(
         location,
         numOfComponent,
-        gl.FLOAT,
-        false,
+        gl[dataType],
+        normalize,
         0,
         0
       );

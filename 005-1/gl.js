@@ -14,6 +14,8 @@ class GL {
     this.clearColor();
     this.setSize();
     this.clear();
+    this.gl.enable(this.gl.CULL_FACE);
+    this.gl.enable(this.gl.DEPTH_TEST);
   }
   clearColor() {
     this.gl.clearColor(1.0, 1.0, 1.0, 1.0);

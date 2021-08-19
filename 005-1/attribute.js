@@ -1,11 +1,19 @@
 class Attribute {
-  constructor(data, numOfComponent = 3,isStatic = true) {
+  constructor(
+    data,
+    numOfComponent = 3,
+    dataType = 'FLOAT',
+    normalize = false,
+    isStatic = true
+  ) {
     this.data = data;
     this.buffer = null;
     this.location = null;
     this.isStatic = isStatic;
     this.numOfComponent = numOfComponent;
     this.vertexCount = data.length / numOfComponent;
+    this.dataType = dataType;
+    this.normalize = normalize;
   }
 
   initBuffer(name, gl, program) {
@@ -13,7 +21,7 @@ class Attribute {
     this.location = gl.getAttribLocation(program, name);
     const {
       numOfComponent, buffer, data, isStatic,
-      location,
+      location, dataType, normalize
     } = this;
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -23,6 +31,8 @@ class Attribute {
       buffer,
       location,
       numOfComponent,
+      dataType,
+      normalize,
     }
   }
 }

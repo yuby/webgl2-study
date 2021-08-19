@@ -18,4 +18,5 @@
 - [v] 004-2 - line / grid + color + angle
 - [v] 005 - transform
 - [v] 005-1 - transform / orthographic(1)
-- [v] 005-2 - transform / perspective(2)
+- [] 005-2 - transform / perspective(2)
+- [] 005-3 - interactive
